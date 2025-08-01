@@ -11,6 +11,7 @@ const HOF_KEY = 'lumberjackHallOfFame';
 const STARTING_CHAPTER = 'gildaDeiBoschi';
 
 // --- ELEMENTI DEL DOM ---
+const backgroundContainer = document.getElementById('background-container');
 const mainMenu = document.getElementById('main-menu');
 const mainTitle = document.getElementById('main-title');
 const gameScreen = document.getElementById('game-screen');
@@ -18,6 +19,8 @@ const endScreen = document.getElementById('end-screen');
 const manualScreen = document.getElementById('manual-screen');
 const creditsScreen = document.getElementById('credits-screen');
 const hofScreen = document.getElementById('hof-screen');
+const newGameModal = document.getElementById('new-game-modal');
+const cutsceneScreen = document.getElementById('cutscene-screen');
 
 const newGameButton = document.getElementById('new-game-button');
 const loadGameButton = document.getElementById('load-game-button');
@@ -50,20 +53,84 @@ const creditsBackButton = document.getElementById('credits-back-button');
 const hofBackButton = document.getElementById('hof-back-button');
 const importFileInput = document.getElementById('import-file-input');
 
+const playerNameInput = document.getElementById('player-name-input');
+const startGameButton = document.getElementById('start-game-button');
+
+const cutsceneImage = document.getElementById('cutscene-image');
+const cutsceneText = document.getElementById('cutscene-text');
+const cutsceneContinueButton = document.getElementById('cutscene-continue-button');
+
+
+// --- FUNZIONI DI GESTIONE SFONDI ---
+function updateBackground(screenName) {
+    const imageUrl = backgrounds[screenName] || backgrounds.default;
+
+    const tempImage = new Image();
+    tempImage.onload = () => {
+        backgroundContainer.style.backgroundImage = `url('${imageUrl}')`;
+        backgroundContainer.style.opacity = 1;
+    };
+    tempImage.onerror = () => {
+        backgroundContainer.style.backgroundImage = '';
+        backgroundContainer.style.backgroundColor = backgrounds.default;
+        backgroundContainer.style.opacity = 1;
+    };
+
+    backgroundContainer.style.opacity = 0;
+    setTimeout(() => {
+        tempImage.src = imageUrl;
+    }, 500);
+}
+
 
 // --- FUNZIONI DI GESTIONE SCHERMATE ---
 function showScreen(screen) {
+    const screenMap = {
+        'main-menu': 'mainMenu',
+        'game-screen': 'game',
+        'manual-screen': 'manual',
+        'hof-screen': 'hallOfFame',
+        'credits-screen': 'mainMenu',
+        'end-screen': 'game',
+        'cutscene-screen': 'game' // Cutscenes use the game background
+    };
+    const screenName = screenMap[screen.id] || 'default';
+    updateBackground(screenName);
+
     mainMenu.classList.add('hidden');
     gameScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     manualScreen.classList.add('hidden');
     creditsScreen.classList.add('hidden');
     hofScreen.classList.add('hidden');
+    cutsceneScreen.classList.add('hidden');
     screen.classList.remove('hidden');
+
     if (screen === mainMenu) {
         updateLoadButtonState();
     }
 }
+
+// --- LOGICA CUTSCENE ---
+function showCutscene(cutscene, callback) {
+    if (!cutscene) {
+        callback();
+        return;
+    }
+
+    cutsceneImage.src = cutscene.image;
+    cutsceneText.textContent = cutscene.text;
+
+    const continueHandler = () => {
+        cutsceneContinueButton.removeEventListener('click', continueHandler);
+        callback();
+    };
+
+    cutsceneContinueButton.addEventListener('click', continueHandler, { once: true });
+
+    showScreen(cutsceneScreen);
+}
+
 
 // --- LOGICA HALL OF FAME ---
 function getHighScores() {
@@ -73,21 +140,19 @@ function getHighScores() {
 
 function saveHighScores(scores) {
     scores.sort((a, b) => b.score - a.score);
-    const topScores = scores.slice(0, 5);
+    const topScores = scores.slice(0, 10);
     localStorage.setItem(HOF_KEY, JSON.stringify(topScores));
 }
 
 function checkAndAddHighScore(score) {
     const highScores = getHighScores();
-    const lowestHighScore = highScores.length < 5 ? 0 : highScores[4].score;
+    const lowestHighScore = highScores.length < 10 ? 0 : highScores[9].score;
 
     if (score > lowestHighScore) {
-        const name = prompt("Nuovo record! Inserisci il tuo nome (3 lettere):", "AAA");
-        if (name && name.trim()) {
-            const newScore = { name: name.slice(0, 3).toUpperCase(), score: score };
-            highScores.push(newScore);
-            saveHighScores(highScores);
-        }
+        const name = gameState.player.name || "AAA";
+        const newScore = { name: name, score: score };
+        highScores.push(newScore);
+        saveHighScores(highScores);
     }
 }
 
@@ -191,22 +256,34 @@ function startChapter(chapterId) {
         return;
     }
 
-    if (!gameState.player) {
-         gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
-    }
-    
-    gameState.player.metrics = {};
-    for (const metricKey in chapter.metrics) {
-        gameState.player.metrics[metricKey] = 5;
-    }
+    const chapterCutscenes = cutscenes[chapterId];
 
-    gameState.currentChapterId = chapterId;
-    gameState.scenarios = [...chapter.scenarios].sort(() => Math.random() - 0.5);
-    gameState.currentScenarioIndex = -1;
-    
-    mainTitle.textContent = chapter.title;
-    showScreen(gameScreen);
-    nextScenario();
+    const startChapterLogic = () => {
+        const playerName = gameState.player.name;
+        const playerScore = gameState.player.score || 0;
+        gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
+        gameState.player.name = playerName;
+        gameState.player.score = playerScore;
+
+        gameState.player.metrics = {};
+        for (const metricKey in chapter.metrics) {
+            gameState.player.metrics[metricKey] = 5;
+        }
+
+        gameState.currentChapterId = chapterId;
+        gameState.scenarios = [...chapter.scenarios].sort(() => Math.random() - 0.5);
+        gameState.currentScenarioIndex = -1;
+
+        mainTitle.textContent = chapter.title;
+        showScreen(gameScreen);
+        nextScenario();
+    };
+
+    if (chapterCutscenes && chapterCutscenes.start) {
+        showCutscene(chapterCutscenes.start, startChapterLogic);
+    } else {
+        startChapterLogic();
+    }
 }
 
 function updateUI() {
@@ -238,19 +315,31 @@ function displayCurrentScenario() {
 
 function nextScenario() {
     gameState.currentScenarioIndex++;
-    if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
-        endGame("success");
-        return;
+
+    const chapterCutscenes = cutscenes[gameState.currentChapterId];
+    const midPoint = Math.floor(gameState.scenarios.length / 2);
+
+    const showNextScenario = () => {
+        if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
+            endGame("success");
+            return;
+        }
+        displayCurrentScenario();
+        updateUI();
+        saveGame();
+    };
+
+    if (chapterCutscenes && chapterCutscenes.middle && gameState.currentScenarioIndex === midPoint) {
+        showCutscene(chapterCutscenes.middle, showNextScenario);
+    } else {
+        showNextScenario();
     }
-    displayCurrentScenario();
-    updateUI();
-    saveGame();
 }
 
 function selectChoice(choice) {
     const scenario = gameState.scenarios[gameState.currentScenarioIndex];
     if (!scenario) return;
-    
+
     gameState.player.score += 10;
 
     const effects = scenario.choices[choice].effects;
@@ -268,44 +357,69 @@ function selectChoice(choice) {
 }
 
 function endGame(reason, state) {
-    const finalScoreValue = gameState.player.score;
-    deleteSave();
-    showScreen(endScreen);
+    const chapterCutscenes = cutscenes[gameState.currentChapterId];
 
-    const chapterEndings = chapters[gameState.currentChapterId].endings;
-    let finalEnding;
+    const showEndScreen = () => {
+        const finalScoreValue = gameState.player.score;
+        deleteSave();
+        showScreen(endScreen);
 
-    if (reason === "success") {
-        finalEnding = chapterEndings.success;
+        const chapterEndings = chapters[gameState.currentChapterId].endings;
+        let finalEnding;
+
+        if (reason === "success") {
+            finalEnding = chapterEndings.success;
+        } else {
+            finalEnding = chapterEndings[reason] ? chapterEndings[reason][state] : { title: "Fine Improvvisa", message: "Il tuo percorso si interrompe qui.", image: "https://placehold.co/400x400/000000/ffffff?text=?"};
+        }
+
+        endTitle.textContent = finalEnding.title;
+        endMessage.textContent = finalEnding.message;
+        endImage.src = finalEnding.image;
+        endImage.alt = `Immagine finale: ${finalEnding.title}`;
+        finalScore.textContent = `Punteggio Finale: ${finalScoreValue}`;
+
+        if (finalEnding.nextChapter) {
+            continueButton.classList.remove('hidden');
+            endScreenMenuButton.classList.add('hidden');
+            continueButton.dataset.nextChapter = finalEnding.nextChapter;
+        } else {
+            checkAndAddHighScore(finalScoreValue);
+            continueButton.classList.add('hidden');
+            endScreenMenuButton.classList.remove('hidden');
+        }
+    };
+
+    if (chapterCutscenes && chapterCutscenes.end && reason === "success") {
+        showCutscene(chapterCutscenes.end, showEndScreen);
     } else {
-        finalEnding = chapterEndings[reason] ? chapterEndings[reason][state] : { title: "Fine Improvvisa", message: "Il tuo percorso si interrompe qui.", image: "https://placehold.co/400x400/000000/ffffff?text=?"};
-    }
-
-    endTitle.textContent = finalEnding.title;
-    endMessage.textContent = finalEnding.message;
-    endImage.src = finalEnding.image;
-    endImage.alt = `Immagine finale: ${finalEnding.title}`;
-    finalScore.textContent = `Punteggio Finale: ${finalScoreValue}`;
-
-    checkAndAddHighScore(finalScoreValue);
-
-    if (finalEnding.nextChapter) {
-        continueButton.classList.remove('hidden');
-        endScreenMenuButton.classList.add('hidden');
-        continueButton.dataset.nextChapter = finalEnding.nextChapter;
-    } else {
-        continueButton.classList.add('hidden');
-        endScreenMenuButton.classList.remove('hidden');
+        showEndScreen();
     }
 }
 
 // --- INIZIALIZZAZIONE ---
 function init() {
+    const audioManager = new AudioManager(musicPlaylist, backgroundMusic);
+
     // Listener Menu Principale
     newGameButton.addEventListener('click', () => {
+        newGameModal.classList.remove('hidden');
+        playerNameInput.focus();
+    });
+
+    startGameButton.addEventListener('click', () => {
+        let playerName = playerNameInput.value.trim();
+        if (!playerName) {
+            playerName = "AAA";
+        }
         gameState = {};
+        gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
+        gameState.player.name = playerName;
+
+        newGameModal.classList.add('hidden');
         startChapter(STARTING_CHAPTER);
     });
+
     loadGameButton.addEventListener('click', loadGame);
     importGameButton.addEventListener('click', () => importFileInput.click());
     importFileInput.addEventListener('change', handleFileImport);
@@ -319,7 +433,7 @@ function init() {
     noButton.addEventListener('click', () => selectChoice('no'));
     downloadGameButton.addEventListener('click', downloadSaveFile);
     returnToMenuButton.addEventListener('click', () => showScreen(mainMenu));
-    
+
     // Listener Schermata Finale
     endScreenMenuButton.addEventListener('click', () => showScreen(mainMenu));
     continueButton.addEventListener('click', (e) => {
@@ -333,32 +447,18 @@ function init() {
     manualBackButton.addEventListener('click', () => showScreen(mainMenu));
     creditsBackButton.addEventListener('click', () => showScreen(mainMenu));
     hofBackButton.addEventListener('click', () => showScreen(mainMenu));
-    
-    // Listener Audio
-    const savedVolume = localStorage.getItem('lumberjackVolume');
-    volumeSlider.value = savedVolume ? savedVolume : 0.5;
-    backgroundMusic.volume = volumeSlider.value;
-    volumeSlider.addEventListener('input', (e) => {
-        backgroundMusic.volume = e.target.value;
-        localStorage.setItem('lumberjackVolume', e.target.value);
-    });
-    backgroundMusic.play().catch(() => {});
 
-    // Listener Tastiera
-    document.addEventListener('keydown', (e) => {
-        if (!gameScreen.classList.contains('hidden')) {
-            if (e.key === 'ArrowRight') {
-                yesButton.click();
-                yesButton.classList.add('scale-105');
-                setTimeout(() => yesButton.classList.remove('scale-105'), 150);
-            } else if (e.key === 'ArrowLeft') {
-                noButton.click();
-                noButton.classList.add('scale-105');
-                setTimeout(() => noButton.classList.remove('scale-105'), 150);
-            }
-        }
+    // Listener Audio
+    const savedVolume = localStorage.getItem('lumberjackVolume') || 0;
+    volumeSlider.value = savedVolume;
+    audioManager.setVolume(parseFloat(savedVolume));
+
+    volumeSlider.addEventListener('input', (e) => {
+        const newVolume = parseFloat(e.target.value);
+        audioManager.setVolume(newVolume);
+        localStorage.setItem('lumberjackVolume', newVolume);
     });
-    
+
     showScreen(mainMenu);
 }
 
