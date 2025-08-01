@@ -76,17 +76,17 @@ function getHighScores() {
 
 function saveHighScores(scores) {
     scores.sort((a, b) => b.score - a.score);
-    const topScores = scores.slice(0, 5);
+    const topScores = scores.slice(0, 10);
     localStorage.setItem(HOF_KEY, JSON.stringify(topScores));
 }
 
 function checkAndAddHighScore(score) {
     const highScores = getHighScores();
-    const lowestHighScore = highScores.length < 5 ? 0 : highScores[4].score;
+    const lowestHighScore = highScores.length < 10 ? 0 : highScores[9].score;
 
     if (score > lowestHighScore) {
         const name = gameState.player.name || "AAA";
-        const newScore = { name: name.slice(0, 3).toUpperCase(), score: score };
+        const newScore = { name: name, score: score };
         highScores.push(newScore);
         saveHighScores(highScores);
     }
@@ -310,7 +310,7 @@ function init() {
     });
 
     startGameButton.addEventListener('click', () => {
-        let playerName = playerNameInput.value.trim().toUpperCase();
+        let playerName = playerNameInput.value.trim();
         if (!playerName) {
             playerName = "AAA";
         }
