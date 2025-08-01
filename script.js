@@ -11,6 +11,7 @@ const HOF_KEY = 'lumberjackHallOfFame';
 const STARTING_CHAPTER = 'gildaDeiBoschi';
 
 // --- ELEMENTI DEL DOM ---
+const backgroundContainer = document.getElementById('background-container');
 const mainMenu = document.getElementById('main-menu');
 const mainTitle = document.getElementById('main-title');
 const gameScreen = document.getElementById('game-screen');
@@ -54,8 +55,44 @@ const playerNameInput = document.getElementById('player-name-input');
 const startGameButton = document.getElementById('start-game-button');
 
 
+// --- FUNZIONI DI GESTIONE SFONDI ---
+function updateBackground(screenName) {
+    const imageUrl = backgrounds[screenName] || backgrounds.default;
+
+    // Create a temporary image to preload it
+    const tempImage = new Image();
+    tempImage.onload = () => {
+        // Once loaded, set it as the background
+        backgroundContainer.style.backgroundImage = `url('${imageUrl}')`;
+        backgroundContainer.style.opacity = 1;
+    };
+    tempImage.onerror = () => {
+        // If there's an error, use the default solid color
+        backgroundContainer.style.backgroundImage = '';
+        backgroundContainer.style.backgroundColor = backgrounds.default;
+        backgroundContainer.style.opacity = 1;
+    };
+
+    backgroundContainer.style.opacity = 0;
+    setTimeout(() => {
+        tempImage.src = imageUrl;
+    }, 500); // Wait for fade out before loading
+}
+
+
 // --- FUNZIONI DI GESTIONE SCHERMATE ---
 function showScreen(screen) {
+    const screenMap = {
+        'main-menu': 'mainMenu',
+        'game-screen': 'game',
+        'manual-screen': 'manual',
+        'hof-screen': 'hallOfFame',
+        'credits-screen': 'mainMenu', // Or a dedicated credits background
+        'end-screen': 'game'
+    };
+    const screenName = screenMap[screen.id] || 'default';
+    updateBackground(screenName);
+
     mainMenu.classList.add('hidden');
     gameScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
