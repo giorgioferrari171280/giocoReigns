@@ -25,7 +25,6 @@ const importGameButton = document.getElementById('import-game-button');
 const manualButton = document.getElementById('manual-button');
 const creditsButton = document.getElementById('credits-button');
 const hofButton = document.getElementById('hof-button');
-const exitButton = document.getElementById('exit-button');
 const volumeSlider = document.getElementById('volume-slider');
 const backgroundMusic = document.getElementById('background-music');
 
@@ -194,7 +193,7 @@ function startChapter(chapterId) {
     if (!gameState.player) {
          gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
     }
-    
+
     gameState.player.metrics = {};
     for (const metricKey in chapter.metrics) {
         gameState.player.metrics[metricKey] = 5;
@@ -203,7 +202,7 @@ function startChapter(chapterId) {
     gameState.currentChapterId = chapterId;
     gameState.scenarios = [...chapter.scenarios].sort(() => Math.random() - 0.5);
     gameState.currentScenarioIndex = -1;
-    
+
     mainTitle.textContent = chapter.title;
     showScreen(gameScreen);
     nextScenario();
@@ -250,7 +249,7 @@ function nextScenario() {
 function selectChoice(choice) {
     const scenario = gameState.scenarios[gameState.currentScenarioIndex];
     if (!scenario) return;
-    
+
     gameState.player.score += 10;
 
     const effects = scenario.choices[choice].effects;
@@ -312,14 +311,13 @@ function init() {
     manualButton.addEventListener('click', () => showScreen(manualScreen));
     creditsButton.addEventListener('click', displayCredits);
     hofButton.addEventListener('click', displayHallOfFame);
-    exitButton.addEventListener('click', () => window.close());
 
     // Listener Schermata di Gioco
     yesButton.addEventListener('click', () => selectChoice('yes'));
     noButton.addEventListener('click', () => selectChoice('no'));
     downloadGameButton.addEventListener('click', downloadSaveFile);
     returnToMenuButton.addEventListener('click', () => showScreen(mainMenu));
-    
+
     // Listener Schermata Finale
     endScreenMenuButton.addEventListener('click', () => showScreen(mainMenu));
     continueButton.addEventListener('click', (e) => {
@@ -333,7 +331,7 @@ function init() {
     manualBackButton.addEventListener('click', () => showScreen(mainMenu));
     creditsBackButton.addEventListener('click', () => showScreen(mainMenu));
     hofBackButton.addEventListener('click', () => showScreen(mainMenu));
-    
+
     // Listener Audio
     const savedVolume = localStorage.getItem('lumberjackVolume');
     volumeSlider.value = savedVolume ? savedVolume : 0.5;
@@ -358,7 +356,7 @@ function init() {
             }
         }
     });
-    
+
     showScreen(mainMenu);
 }
 
