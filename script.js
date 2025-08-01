@@ -192,10 +192,12 @@ function startChapter(chapterId) {
         return;
     }
 
-    // Preserve player name but reset other stats
+    // Preserve player name and score, but reset metrics and flags for the new chapter.
     const playerName = gameState.player.name;
-    gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
+    const playerScore = gameState.player.score;
+    gameState.player = JSON.parse(JSON.stringify(initialPlayerState)); // Reset metrics and flags
     gameState.player.name = playerName;
+    gameState.player.score = playerScore;
 
     gameState.player.metrics = {};
     for (const metricKey in chapter.metrics) {
@@ -272,7 +274,6 @@ function selectChoice(choice) {
 
 function endGame(reason, state) {
     const finalScoreValue = gameState.player.score;
-    checkAndAddHighScore(finalScoreValue); // Check high score before deleting save
     deleteSave();
     showScreen(endScreen);
 
@@ -296,6 +297,8 @@ function endGame(reason, state) {
         endScreenMenuButton.classList.add('hidden');
         continueButton.dataset.nextChapter = finalEnding.nextChapter;
     } else {
+        // This is a true ending, not a chapter transition. Check for high score.
+        checkAndAddHighScore(finalScoreValue);
         continueButton.classList.add('hidden');
         endScreenMenuButton.classList.remove('hidden');
     }
@@ -314,9 +317,9 @@ function init() {
         if (!playerName) {
             playerName = "AAA";
         }
-        gameState = {
-            player: JSON.parse(JSON.stringify(initialPlayerState))
-        };
+        // Reset gameState for a new game
+        gameState = {};
+        gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
         gameState.player.name = playerName;
         startChapter(STARTING_CHAPTER);
     });
