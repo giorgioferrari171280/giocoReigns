@@ -27,6 +27,7 @@ const importGameButton = document.getElementById('import-game-button');
 const manualButton = document.getElementById('manual-button');
 const creditsButton = document.getElementById('credits-button');
 const hofButton = document.getElementById('hof-button');
+const exitButton = document.getElementById('exit-button');
 const volumeSlider = document.getElementById('volume-slider');
 const backgroundMusic = document.getElementById('background-music'); // This is the <audio> element
 
@@ -363,6 +364,7 @@ function init() {
     manualButton.addEventListener('click', () => showScreen(manualScreen));
     creditsButton.addEventListener('click', displayCredits);
     hofButton.addEventListener('click', displayHallOfFame);
+    exitButton.addEventListener('click', () => window.close());
 
     // Listener Schermata di Gioco
     yesButton.addEventListener('click', () => selectChoice('yes'));
