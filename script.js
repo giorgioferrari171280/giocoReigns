@@ -20,6 +20,7 @@ const manualScreen = document.getElementById('manual-screen');
 const creditsScreen = document.getElementById('credits-screen');
 const hofScreen = document.getElementById('hof-screen');
 const newGameModal = document.getElementById('new-game-modal');
+const cutsceneScreen = document.getElementById('cutscene-screen');
 
 const newGameButton = document.getElementById('new-game-button');
 const loadGameButton = document.getElementById('load-game-button');
@@ -29,7 +30,7 @@ const creditsButton = document.getElementById('credits-button');
 const hofButton = document.getElementById('hof-button');
 const exitButton = document.getElementById('exit-button');
 const volumeSlider = document.getElementById('volume-slider');
-const backgroundMusic = document.getElementById('background-music'); // This is the <audio> element
+const backgroundMusic = document.getElementById('background-music');
 
 const scoreDisplay = document.getElementById('score-display');
 const metricsDisplay = document.getElementById('metrics-display');
@@ -54,6 +55,10 @@ const importFileInput = document.getElementById('import-file-input');
 
 const playerNameInput = document.getElementById('player-name-input');
 const startGameButton = document.getElementById('start-game-button');
+
+const cutsceneImage = document.getElementById('cutscene-image');
+const cutsceneText = document.getElementById('cutscene-text');
+const cutsceneContinueButton = document.getElementById('cutscene-continue-button');
 
 
 // --- FUNZIONI DI GESTIONE SFONDI ---
@@ -86,7 +91,8 @@ function showScreen(screen) {
         'manual-screen': 'manual',
         'hof-screen': 'hallOfFame',
         'credits-screen': 'mainMenu',
-        'end-screen': 'game'
+        'end-screen': 'game',
+        'cutscene-screen': 'game' // Cutscenes use the game background
     };
     const screenName = screenMap[screen.id] || 'default';
     updateBackground(screenName);
@@ -97,11 +103,34 @@ function showScreen(screen) {
     manualScreen.classList.add('hidden');
     creditsScreen.classList.add('hidden');
     hofScreen.classList.add('hidden');
+    cutsceneScreen.classList.add('hidden');
     screen.classList.remove('hidden');
+
     if (screen === mainMenu) {
         updateLoadButtonState();
     }
 }
+
+// --- LOGICA CUTSCENE ---
+function showCutscene(cutscene, callback) {
+    if (!cutscene) {
+        callback();
+        return;
+    }
+
+    cutsceneImage.src = cutscene.image;
+    cutsceneText.textContent = cutscene.text;
+
+    const continueHandler = () => {
+        cutsceneContinueButton.removeEventListener('click', continueHandler);
+        callback();
+    };
+
+    cutsceneContinueButton.addEventListener('click', continueHandler, { once: true });
+
+    showScreen(cutsceneScreen);
+}
+
 
 // --- LOGICA HALL OF FAME ---
 function getHighScores() {
@@ -227,25 +256,35 @@ function startChapter(chapterId) {
         return;
     }
 
-    const playerName = gameState.player.name;
-    const playerScore = gameState.player.score;
-    gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
-    gameState.player.name = playerName;
-    gameState.player.score = playerScore;
+    const chapterCutscenes = cutscenes[chapterId];
 
-    gameState.player.metrics = {};
-    for (const metricKey in chapter.metrics) {
-        gameState.player.metrics[metricKey] = 5;
+    const startChapterLogic = () => {
+        const playerName = gameState.player.name;
+        const playerScore = gameState.player.score || 0;
+        gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
+        gameState.player.name = playerName;
+        gameState.player.score = playerScore;
+
+        gameState.player.metrics = {};
+        for (const metricKey in chapter.metrics) {
+            gameState.player.metrics[metricKey] = 5;
+        }
+
+        gameState.currentChapterId = chapterId;
+        gameState.scenarios = [...chapter.scenarios].sort(() => Math.random() - 0.5);
+        gameState.currentScenarioIndex = -1;
+
+        mainTitle.textContent = chapter.title;
+        newGameModal.classList.add('hidden');
+        showScreen(gameScreen);
+        nextScenario();
+    };
+
+    if (chapterCutscenes && chapterCutscenes.start) {
+        showCutscene(chapterCutscenes.start, startChapterLogic);
+    } else {
+        startChapterLogic();
     }
-
-    gameState.currentChapterId = chapterId;
-    gameState.scenarios = [...chapter.scenarios].sort(() => Math.random() - 0.5);
-    gameState.currentScenarioIndex = -1;
-
-    mainTitle.textContent = chapter.title;
-    newGameModal.classList.add('hidden');
-    showScreen(gameScreen);
-    nextScenario();
 }
 
 function updateUI() {
@@ -277,13 +316,25 @@ function displayCurrentScenario() {
 
 function nextScenario() {
     gameState.currentScenarioIndex++;
-    if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
-        endGame("success");
-        return;
+
+    const chapterCutscenes = cutscenes[gameState.currentChapterId];
+    const midPoint = Math.floor(gameState.scenarios.length / 2);
+
+    const showNextScenario = () => {
+        if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
+            endGame("success");
+            return;
+        }
+        displayCurrentScenario();
+        updateUI();
+        saveGame();
+    };
+
+    if (chapterCutscenes && chapterCutscenes.middle && gameState.currentScenarioIndex === midPoint) {
+        showCutscene(chapterCutscenes.middle, showNextScenario);
+    } else {
+        showNextScenario();
     }
-    displayCurrentScenario();
-    updateUI();
-    saveGame();
 }
 
 function selectChoice(choice) {
@@ -307,33 +358,43 @@ function selectChoice(choice) {
 }
 
 function endGame(reason, state) {
-    const finalScoreValue = gameState.player.score;
-    deleteSave();
-    showScreen(endScreen);
+    const chapterCutscenes = cutscenes[gameState.currentChapterId];
 
-    const chapterEndings = chapters[gameState.currentChapterId].endings;
-    let finalEnding;
+    const showEndScreen = () => {
+        const finalScoreValue = gameState.player.score;
+        deleteSave();
+        showScreen(endScreen);
 
-    if (reason === "success") {
-        finalEnding = chapterEndings.success;
+        const chapterEndings = chapters[gameState.currentChapterId].endings;
+        let finalEnding;
+
+        if (reason === "success") {
+            finalEnding = chapterEndings.success;
+        } else {
+            finalEnding = chapterEndings[reason] ? chapterEndings[reason][state] : { title: "Fine Improvvisa", message: "Il tuo percorso si interrompe qui.", image: "https://placehold.co/400x400/000000/ffffff?text=?"};
+        }
+
+        endTitle.textContent = finalEnding.title;
+        endMessage.textContent = finalEnding.message;
+        endImage.src = finalEnding.image;
+        endImage.alt = `Immagine finale: ${finalEnding.title}`;
+        finalScore.textContent = `Punteggio Finale: ${finalScoreValue}`;
+
+        if (finalEnding.nextChapter) {
+            continueButton.classList.remove('hidden');
+            endScreenMenuButton.classList.add('hidden');
+            continueButton.dataset.nextChapter = finalEnding.nextChapter;
+        } else {
+            checkAndAddHighScore(finalScoreValue);
+            continueButton.classList.add('hidden');
+            endScreenMenuButton.classList.remove('hidden');
+        }
+    };
+
+    if (chapterCutscenes && chapterCutscenes.end && reason === "success") {
+        showCutscene(chapterCutscenes.end, showEndScreen);
     } else {
-        finalEnding = chapterEndings[reason] ? chapterEndings[reason][state] : { title: "Fine Improvvisa", message: "Il tuo percorso si interrompe qui.", image: "https://placehold.co/400x400/000000/ffffff?text=?"};
-    }
-
-    endTitle.textContent = finalEnding.title;
-    endMessage.textContent = finalEnding.message;
-    endImage.src = finalEnding.image;
-    endImage.alt = `Immagine finale: ${finalEnding.title}`;
-    finalScore.textContent = `Punteggio Finale: ${finalScoreValue}`;
-
-    if (finalEnding.nextChapter) {
-        continueButton.classList.remove('hidden');
-        endScreenMenuButton.classList.add('hidden');
-        continueButton.dataset.nextChapter = finalEnding.nextChapter;
-    } else {
-        checkAndAddHighScore(finalScoreValue);
-        continueButton.classList.add('hidden');
-        endScreenMenuButton.classList.remove('hidden');
+        showEndScreen();
     }
 }
 
