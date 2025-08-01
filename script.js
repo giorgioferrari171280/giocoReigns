@@ -28,7 +28,7 @@ const manualButton = document.getElementById('manual-button');
 const creditsButton = document.getElementById('credits-button');
 const hofButton = document.getElementById('hof-button');
 const volumeSlider = document.getElementById('volume-slider');
-const backgroundMusic = document.getElementById('background-music');
+const backgroundMusic = document.getElementById('background-music'); // This is the <audio> element
 
 const scoreDisplay = document.getElementById('score-display');
 const metricsDisplay = document.getElementById('metrics-display');
@@ -59,15 +59,12 @@ const startGameButton = document.getElementById('start-game-button');
 function updateBackground(screenName) {
     const imageUrl = backgrounds[screenName] || backgrounds.default;
 
-    // Create a temporary image to preload it
     const tempImage = new Image();
     tempImage.onload = () => {
-        // Once loaded, set it as the background
         backgroundContainer.style.backgroundImage = `url('${imageUrl}')`;
         backgroundContainer.style.opacity = 1;
     };
     tempImage.onerror = () => {
-        // If there's an error, use the default solid color
         backgroundContainer.style.backgroundImage = '';
         backgroundContainer.style.backgroundColor = backgrounds.default;
         backgroundContainer.style.opacity = 1;
@@ -76,7 +73,7 @@ function updateBackground(screenName) {
     backgroundContainer.style.opacity = 0;
     setTimeout(() => {
         tempImage.src = imageUrl;
-    }, 500); // Wait for fade out before loading
+    }, 500);
 }
 
 
@@ -87,7 +84,7 @@ function showScreen(screen) {
         'game-screen': 'game',
         'manual-screen': 'manual',
         'hof-screen': 'hallOfFame',
-        'credits-screen': 'mainMenu', // Or a dedicated credits background
+        'credits-screen': 'mainMenu',
         'end-screen': 'game'
     };
     const screenName = screenMap[screen.id] || 'default';
@@ -229,10 +226,9 @@ function startChapter(chapterId) {
         return;
     }
 
-    // Preserve player name and score, but reset metrics and flags for the new chapter.
     const playerName = gameState.player.name;
     const playerScore = gameState.player.score;
-    gameState.player = JSON.parse(JSON.stringify(initialPlayerState)); // Reset metrics and flags
+    gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
     gameState.player.name = playerName;
     gameState.player.score = playerScore;
 
@@ -334,7 +330,6 @@ function endGame(reason, state) {
         endScreenMenuButton.classList.add('hidden');
         continueButton.dataset.nextChapter = finalEnding.nextChapter;
     } else {
-        // This is a true ending, not a chapter transition. Check for high score.
         checkAndAddHighScore(finalScoreValue);
         continueButton.classList.add('hidden');
         endScreenMenuButton.classList.remove('hidden');
@@ -343,6 +338,8 @@ function endGame(reason, state) {
 
 // --- INIZIALIZZAZIONE ---
 function init() {
+    const audioManager = new AudioManager(musicPlaylist, backgroundMusic);
+
     // Listener Menu Principale
     newGameButton.addEventListener('click', () => {
         newGameModal.classList.remove('hidden');
@@ -354,7 +351,6 @@ function init() {
         if (!playerName) {
             playerName = "AAA";
         }
-        // Reset gameState for a new game
         gameState = {};
         gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
         gameState.player.name = playerName;
@@ -389,28 +385,14 @@ function init() {
     hofBackButton.addEventListener('click', () => showScreen(mainMenu));
 
     // Listener Audio
-    const savedVolume = localStorage.getItem('lumberjackVolume');
-    volumeSlider.value = savedVolume ? savedVolume : 0.5;
-    backgroundMusic.volume = volumeSlider.value;
-    volumeSlider.addEventListener('input', (e) => {
-        backgroundMusic.volume = e.target.value;
-        localStorage.setItem('lumberjackVolume', e.target.value);
-    });
-    backgroundMusic.play().catch(() => {});
+    const savedVolume = localStorage.getItem('lumberjackVolume') || 0;
+    volumeSlider.value = savedVolume;
+    audioManager.setVolume(parseFloat(savedVolume));
 
-    // Listener Tastiera
-    document.addEventListener('keydown', (e) => {
-        if (!gameScreen.classList.contains('hidden')) {
-            if (e.key === 'ArrowRight') {
-                yesButton.click();
-                yesButton.classList.add('scale-105');
-                setTimeout(() => yesButton.classList.remove('scale-105'), 150);
-            } else if (e.key === 'ArrowLeft') {
-                noButton.click();
-                noButton.classList.add('scale-105');
-                setTimeout(() => noButton.classList.remove('scale-105'), 150);
-            }
-        }
+    volumeSlider.addEventListener('input', (e) => {
+        const newVolume = parseFloat(e.target.value);
+        audioManager.setVolume(newVolume);
+        localStorage.setItem('lumberjackVolume', newVolume);
     });
 
     showScreen(mainMenu);
