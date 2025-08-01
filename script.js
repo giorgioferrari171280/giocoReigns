@@ -18,6 +18,7 @@ const endScreen = document.getElementById('end-screen');
 const manualScreen = document.getElementById('manual-screen');
 const creditsScreen = document.getElementById('credits-screen');
 const hofScreen = document.getElementById('hof-screen');
+const newGameModal = document.getElementById('new-game-modal');
 
 const newGameButton = document.getElementById('new-game-button');
 const loadGameButton = document.getElementById('load-game-button');
@@ -48,6 +49,9 @@ const manualBackButton = document.getElementById('manual-back-button');
 const creditsBackButton = document.getElementById('credits-back-button');
 const hofBackButton = document.getElementById('hof-back-button');
 const importFileInput = document.getElementById('import-file-input');
+
+const playerNameInput = document.getElementById('player-name-input');
+const startGameButton = document.getElementById('start-game-button');
 
 
 // --- FUNZIONI DI GESTIONE SCHERMATE ---
@@ -81,12 +85,10 @@ function checkAndAddHighScore(score) {
     const lowestHighScore = highScores.length < 5 ? 0 : highScores[4].score;
 
     if (score > lowestHighScore) {
-        const name = prompt("Nuovo record! Inserisci il tuo nome (3 lettere):", "AAA");
-        if (name && name.trim()) {
-            const newScore = { name: name.slice(0, 3).toUpperCase(), score: score };
-            highScores.push(newScore);
-            saveHighScores(highScores);
-        }
+        const name = gameState.player.name || "AAA";
+        const newScore = { name: name.slice(0, 3).toUpperCase(), score: score };
+        highScores.push(newScore);
+        saveHighScores(highScores);
     }
 }
 
@@ -190,9 +192,10 @@ function startChapter(chapterId) {
         return;
     }
 
-    if (!gameState.player) {
-         gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
-    }
+    // Preserve player name but reset other stats
+    const playerName = gameState.player.name;
+    gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
+    gameState.player.name = playerName;
 
     gameState.player.metrics = {};
     for (const metricKey in chapter.metrics) {
@@ -204,6 +207,7 @@ function startChapter(chapterId) {
     gameState.currentScenarioIndex = -1;
 
     mainTitle.textContent = chapter.title;
+    newGameModal.classList.add('hidden');
     showScreen(gameScreen);
     nextScenario();
 }
@@ -268,6 +272,7 @@ function selectChoice(choice) {
 
 function endGame(reason, state) {
     const finalScoreValue = gameState.player.score;
+    checkAndAddHighScore(finalScoreValue); // Check high score before deleting save
     deleteSave();
     showScreen(endScreen);
 
@@ -286,8 +291,6 @@ function endGame(reason, state) {
     endImage.alt = `Immagine finale: ${finalEnding.title}`;
     finalScore.textContent = `Punteggio Finale: ${finalScoreValue}`;
 
-    checkAndAddHighScore(finalScoreValue);
-
     if (finalEnding.nextChapter) {
         continueButton.classList.remove('hidden');
         endScreenMenuButton.classList.add('hidden');
@@ -302,9 +305,22 @@ function endGame(reason, state) {
 function init() {
     // Listener Menu Principale
     newGameButton.addEventListener('click', () => {
-        gameState = {};
+        newGameModal.classList.remove('hidden');
+        playerNameInput.focus();
+    });
+
+    startGameButton.addEventListener('click', () => {
+        let playerName = playerNameInput.value.trim().toUpperCase();
+        if (!playerName) {
+            playerName = "AAA";
+        }
+        gameState = {
+            player: JSON.parse(JSON.stringify(initialPlayerState))
+        };
+        gameState.player.name = playerName;
         startChapter(STARTING_CHAPTER);
     });
+
     loadGameButton.addEventListener('click', loadGame);
     importGameButton.addEventListener('click', () => importFileInput.click());
     importFileInput.addEventListener('change', handleFileImport);
