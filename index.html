@@ -15,7 +15,7 @@
 <body class="bg-[#2d2424] text-gray-200 flex items-center justify-center min-h-screen p-4">
 
     <div id="app-container" class="w-full max-w-4xl mx-auto bg-[#3e3431] rounded-lg shadow-2xl p-6 border-2 border-[#5a4d44] max-h-screen overflow-y-auto">
-        
+
         <!-- Schermata Menu Principale -->
         <div id="main-menu" class="text-center">
             <h1 id="main-title" class="text-4xl font-bold mb-6 text-[#c8a27c]">Gilda dei Taglialegna</h1>
@@ -104,9 +104,9 @@
         </div>
 
         <!-- Schermata Manuale -->
-        <div id="manual-screen" class="hidden text-left">
-            <h2 class="text-3xl font-bold mb-6 text-center text-[#c8a27c]">Manuale di Gioco</h2>
-            <div class="space-y-4 text-gray-300">
+        <div id="manual-screen" class="hidden text-left flex flex-col h-full">
+            <h2 class="text-3xl font-bold mb-4 text-center text-[#c8a27c]">Manuale di Gioco</h2>
+            <div class="space-y-4 text-gray-300 flex-grow overflow-y-auto pr-4">
                 <p>Benvenuto nella Gilda dei Taglialegna. Il tuo obiettivo è guidare la gilda il più a lungo possibile, bilanciando quattro metriche fondamentali.</p>
                 <div>
                     <h3 class="text-xl font-bold text-[#c8a27c]">Le Metriche</h3>
@@ -118,9 +118,21 @@
                 <h3 class="text-xl font-bold text-[#c8a27c]">Salvataggi</h3>
                 <p>Il gioco salva automaticamente i progressi nel browser. Puoi usare "Carica Partita" per riprendere. Con "Importa Partita" e "Scarica Partita" puoi trasferire i tuoi salvataggi tra diversi computer.</p>
             </div>
-            <div class="text-center mt-8">
+            <div class="text-center mt-4 pt-4 border-t border-gray-700">
                 <button id="manual-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modale Nuovo Gioco -->
+    <div id="new-game-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-[#3e3431] p-8 rounded-lg shadow-2xl w-full max-w-sm text-center border-2 border-[#5a4d44]">
+            <h2 class="text-2xl font-bold mb-6 text-[#c8a27c]">Crea il tuo Personaggio</h2>
+            <div>
+                <label for="player-name-input" class="block mb-2 text-sm font-medium text-left">Nome del Giocatore</label>
+                <input type="text" id="player-name-input" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Massimo 3 lettere (es. GDL)" maxlength="3" required>
+            </div>
+            <button id="start-game-button" class="mt-6 game-button w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-green-900">Inizia l'Avventura</button>
         </div>
     </div>
 
