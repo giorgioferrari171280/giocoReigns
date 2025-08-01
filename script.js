@@ -92,7 +92,7 @@ function showScreen(screen) {
         'hof-screen': 'hallOfFame',
         'credits-screen': 'mainMenu',
         'end-screen': 'game',
-        'cutscene-screen': 'game' // Cutscenes use the game background
+        'cutscene-screen': 'game'
     };
     const screenName = screenMap[screen.id] || 'default';
     updateBackground(screenName);

@@ -1,8 +1,3 @@
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
 body {
     font-family: 'Cinzel', serif;
     touch-action: manipulation;
