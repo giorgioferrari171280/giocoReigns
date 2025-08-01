@@ -1,0 +1,42 @@
+body {
+    font-family: 'Cinzel', serif;
+    touch-action: manipulation;
+}
+
+.metric-bar-bg { 
+    background-color: #4a3f37; 
+}
+
+.metric-bar-fill { 
+    background-color: #c8a27c; 
+    transition: width 0.5s ease-in-out; 
+}
+
+.game-button { 
+    transition: transform 0.1s ease, box-shadow 0.1s ease; 
+}
+
+.game-button:hover:not(:disabled) { 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+}
+
+.game-button:active:not(:disabled) { 
+    transform: translateY(1px); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+}
+
+.game-button:disabled { 
+    cursor: not-allowed; 
+    opacity: 0.5; 
+}
+
+.icon-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    padding: 0.5rem;
+}
+
+.icon-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}

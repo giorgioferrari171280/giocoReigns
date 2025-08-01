@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilda dei Taglialegna</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font e Stili Personalizzati -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#2d2424] text-gray-200 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-4xl mx-auto bg-[#3e3431] rounded-lg shadow-2xl p-6 border-2 border-[#5a4d44] max-h-screen overflow-y-auto">
+        
+        <!-- Schermata Menu Principale -->
+        <div id="main-menu" class="text-center">
+            <h1 id="main-title" class="text-4xl font-bold mb-8 text-[#c8a27c]">Gilda dei Taglialegna</h1>
+            <div class="space-y-4 max-w-sm mx-auto">
+                <button id="new-game-button" class="game-button w-full bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-green-900">NUOVA PARTITA</button>
+                <button id="load-game-button" class="game-button w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-blue-900">CARICA PARTITA</button>
+                <button id="import-game-button" class="game-button w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-purple-900">IMPORTA PARTITA</button>
+                <button id="hof-button" class="game-button w-full bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-yellow-900">HALL OF FAME</button>
+                <button id="credits-button" class="game-button w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-gray-800">CREDITS</button>
+                <button id="manual-button" class="game-button w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-gray-800">MANUALE DI GIOCO</button>
+            </div>
+            <div class="mt-8 max-w-sm mx-auto">
+                <label for="volume-slider" class="block mb-2 text-sm font-medium">Volume</label>
+                <input id="volume-slider" type="range" min="0" max="1" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+            </div>
+        </div>
+
+        <!-- Schermata di Gioco -->
+        <div id="game-screen" class="hidden">
+            <div class="md:flex md:gap-8">
+                <div class="md:w-1/2 mb-4 md:mb-0">
+                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+                        <img id="scenario-image" src="" alt="Immagine dello scenario" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <div id="score-display" class="text-lg font-bold text-[#c8a27c]">Punteggio: 0</div>
+                        <div class="flex gap-2">
+                            <button id="download-game-button" title="Scarica Partita" class="icon-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            </button>
+                            <button id="return-to-menu-button" title="Torna al Menu" class="icon-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="metrics-display" class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4"></div>
+                    <div class="flex-grow flex items-center justify-center my-4">
+                        <p id="scenario-description" class="text-center text-lg"></p>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                        <button id="no-button" class="game-button w-1/2 bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-red-900"></button>
+                        <button id="yes-button" class="game-button w-1/2 bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-green-900"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schermata di Fine Gioco -->
+        <div id="end-screen" class="hidden">
+            <div class="md:flex md:gap-8">
+                <div class="md:w-1/2 mb-4 md:mb-0">
+                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+                        <img id="end-image" src="" alt="Immagine del finale" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col justify-center text-center">
+                    <h2 id="end-title" class="text-3xl font-bold mb-4"></h2>
+                    <p id="end-message" class="text-xl mb-6"></p>
+                    <p id="final-score" class="text-2xl font-bold text-[#c8a27c] mb-6"></p>
+                    <button id="continue-button" class="game-button bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-green-900 mx-auto hidden mb-2">Continua l'Avventura</button>
+                    <button id="end-screen-menu-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900 mx-auto">Torna al Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schermata Hall of Fame -->
+        <div id="hof-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold mb-6 text-center text-[#c8a27c]">Hall of Fame</h2>
+            <ol id="hof-list" class="space-y-2 text-xl max-w-md mx-auto"></ol>
+            <div class="text-center mt-8">
+                <button id="hof-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+            </div>
+        </div>
+
+        <!-- Schermata Credits -->
+        <div id="credits-screen" class="hidden text-center">
+            <img id="dev-image" src="" alt="Sviluppatore" class="w-32 h-32 rounded-full mx-auto mb-4 border-2 border-[#c8a27c]">
+            <h2 id="dev-name" class="text-3xl font-bold text-[#c8a27c]"></h2>
+            <p id="dev-message" class="text-lg mt-4 max-w-lg mx-auto"></p>
+            <a id="dev-link" href="#" target="_blank" class="inline-block mt-4 text-blue-400 hover:text-blue-300">Visita il mio sito</a>
+            <div class="text-center mt-8">
+                <button id="credits-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+            </div>
+        </div>
+
+        <!-- Schermata Manuale -->
+        <div id="manual-screen" class="hidden text-left">
+            <h2 class="text-3xl font-bold mb-6 text-center text-[#c8a27c]">Manuale di Gioco</h2>
+            <div class="space-y-4 text-gray-300">
+                <p>Benvenuto nella Gilda dei Taglialegna. Il tuo obiettivo è guidare la gilda il più a lungo possibile, bilanciando quattro metriche fondamentali.</p>
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">Le Metriche</h3>
+                    <p>Ogni capitolo della tua saga avrà metriche diverse. Presta attenzione a come le tue scelte le influenzano.</p>
+                </div>
+                <p>Ogni volta che una metrica raggiunge il massimo (10) o il minimo (0), il capitolo termina. L'eccesso è pericoloso quanto la scarsità.</p>
+                <h3 class="text-xl font-bold text-[#c8a27c]">Progressione</h3>
+                <p>Il finale di un capitolo può sbloccare il capitolo successivo. Le tue scelte plasmano il tuo percorso.</p>
+                <h3 class="text-xl font-bold text-[#c8a27c]">Salvataggi</h3>
+                <p>Il gioco salva automaticamente i progressi nel browser. Puoi usare "Carica Partita" per riprendere. Con "Importa Partita" e "Scarica Partita" puoi trasferire i tuoi salvataggi tra diversi computer.</p>
+            </div>
+            <div class="text-center mt-8">
+                <button id="manual-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elementi Nascosti -->
+    <audio id="background-music" loop></audio>
+    <input type="file" id="import-file-input" class="hidden" accept=".json">
+
+    <!-- Script del Gioco -->
+    <script src="developer.js"></script>
+    <script src="gilda_tagliaboschi.js"></script>
+    <script src="gilda_maniscalchi.js"></script>
+    <script src="content.js"></script>
+    <script src="player.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
