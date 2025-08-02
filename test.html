@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Gioco</title>
+</head>
+<body>
+    <h1>Test del Gioco</h1>
+    <p>Apri la console del browser (F12) per vedere eventuali errori.</p>
+    <p>Il gioco principale è disponibile in <a href="index.html">index.html</a></p>
+    
+    <script>
+        // Test che tutti i file JavaScript si carichino correttamente
+        const jsFiles = [
+            'backgrounds.js',
+            'audio.js',
+            'cutscene.js',
+            'developer.js',
+            'gilda_tagliaboschi.js',
+            'gilda_maniscalchi.js',
+            'content.js',
+            'player.js',
+            'script.js'
+        ];
+        
+        console.log('Inizio test caricamento file...');
+        
+        jsFiles.forEach(file => {
+            const script = document.createElement('script');
+            script.src = file;
+            script.onload = () => console.log(`✓ ${file} caricato correttamente`);
+            script.onerror = () => console.error(`✗ Errore nel caricamento di ${file}`);
+            document.head.appendChild(script);
+        });
+        
+        // Verifica che gli oggetti principali siano definiti
+        setTimeout(() => {
+            console.log('\nVerifica oggetti principali:');
+            console.log('chapters:', typeof chapters !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('gildaDeiBoschiData:', typeof gildaDeiBoschiData !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('gildaDeiManiscalchiData:', typeof gildaDeiManiscalchiData !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('backgrounds:', typeof backgrounds !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('cutscenes:', typeof cutscenes !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('developer:', typeof developer !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('initialPlayerState:', typeof initialPlayerState !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            console.log('AudioManager:', typeof AudioManager !== 'undefined' ? '✓ Definito' : '✗ Non definito');
+            
+            if (typeof chapters !== 'undefined') {
+                console.log('\nCapitoli disponibili:', Object.keys(chapters));
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

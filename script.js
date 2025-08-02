@@ -275,11 +275,12 @@ function startChapter(chapterId) {
         gameState.currentScenarioIndex = -1;
 
         mainTitle.textContent = chapter.title;
-        newGameModal.classList.add('hidden');
         showScreen(gameScreen);
         nextScenario();
     };
 
+    newGameModal.classList.add('hidden');
+    
     if (chapterCutscenes && chapterCutscenes.start) {
         showCutscene(chapterCutscenes.start, startChapterLogic);
     } else {
@@ -317,24 +318,13 @@ function displayCurrentScenario() {
 function nextScenario() {
     gameState.currentScenarioIndex++;
 
-    const chapterCutscenes = cutscenes[gameState.currentChapterId];
-    const midPoint = Math.floor(gameState.scenarios.length / 2);
-
-    const showNextScenario = () => {
-        if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
-            endGame("success");
-            return;
-        }
-        displayCurrentScenario();
-        updateUI();
-        saveGame();
-    };
-
-    if (chapterCutscenes && chapterCutscenes.middle && gameState.currentScenarioIndex === midPoint) {
-        showCutscene(chapterCutscenes.middle, showNextScenario);
-    } else {
-        showNextScenario();
+    if (gameState.currentScenarioIndex >= gameState.scenarios.length) {
+        endGame("success");
+        return;
     }
+    displayCurrentScenario();
+    updateUI();
+    saveGame();
 }
 
 function selectChoice(choice) {
@@ -408,7 +398,7 @@ function init() {
         playerNameInput.focus();
     });
 
-    startGameButton.addEventListener('click', () => {
+    const startNewGame = () => {
         let playerName = playerNameInput.value.trim();
         if (!playerName) {
             playerName = "AAA";
@@ -417,6 +407,14 @@ function init() {
         gameState.player = JSON.parse(JSON.stringify(initialPlayerState));
         gameState.player.name = playerName;
         startChapter(STARTING_CHAPTER);
+    };
+
+    startGameButton.addEventListener('click', startNewGame);
+    
+    playerNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            startNewGame();
+        }
     });
 
     loadGameButton.addEventListener('click', loadGame);

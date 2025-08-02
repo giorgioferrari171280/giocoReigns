@@ -89,15 +89,21 @@
         </div>
 
         <!-- Schermata Cutscene -->
-        <div id="cutscene-screen" class="hidden flex-col h-full">
-            <div class="w-full h-1/2 bg-black mb-4 rounded-md overflow-hidden border-2 border-[#c8a27c]">
-                <img id="cutscene-image" src="" alt="Immagine scena" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-grow overflow-y-auto pr-4 mb-4">
-                <p id="cutscene-text" class="text-xl text-center"></p>
-            </div>
-            <div class="text-center">
-                <button id="cutscene-continue-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Continua...</button>
+        <div id="cutscene-screen" class="hidden">
+            <div class="md:flex md:gap-8 h-full">
+                <div class="md:w-1/2 mb-4 md:mb-0">
+                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+                        <img id="cutscene-image" src="" alt="Immagine scena" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <p id="cutscene-text" class="text-xl leading-relaxed"></p>
+                    </div>
+                    <div class="text-center">
+                        <button id="cutscene-continue-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Continua...</button>
+                    </div>
+                </div>
             </div>
         </div>
 

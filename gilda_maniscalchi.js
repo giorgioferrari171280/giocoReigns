@@ -33,7 +33,18 @@ const gildaDeiManiscalchiData = {
             low: { title: "Irrilevante", message: "La tua gilda non ha più peso in città.", image: "https://placehold.co/400x400/94a3b8/1e293b?text=Nessuno" },
             high: { title: "Troppo in Vista", message: "La tua influenza ha attirato nemici potenti.", image: "https://placehold.co/400x400/ef4444/f1f5f9?text=Congiura" }
         },
-        // Aggiungi qui altri finali per le nuove metriche...
+        tesoro: {
+            low: { title: "Fucine Fredde", message: "Senza denaro per il carbone, le tue fucine si sono spente per sempre.", image: "https://placehold.co/400x400/475569/f1f5f9?text=Fallimento" },
+            high: { title: "Il Prezzo del Successo", message: "La tua ricchezza ha attirato ladri e assassini. Sei caduto vittima della tua stessa fortuna.", image: "https://placehold.co/400x400/fbbf24/1e293b?text=Assassinio" }
+        },
+        ordine: {
+            low: { title: "Caos Totale", message: "La città è nel caos. La tua gilda è stata travolta dai disordini.", image: "https://placehold.co/400x400/991b1b/f1f5f9?text=Anarchia" },
+            high: { title: "Pugno di Ferro", message: "Il tuo regno del terrore ha unito tutti contro di te. Sei stato rovesciato.", image: "https://placehold.co/400x400/1e293b/f1f5f9?text=Ribellione" }
+        },
+        segreti: {
+            low: { title: "Cieco e Sordo", message: "Senza informazioni, sei stato tradito dai tuoi stessi alleati.", image: "https://placehold.co/400x400/6b7280/f1f5f9?text=Tradimento" },
+            high: { title: "Sapere Troppo", message: "Conoscevi troppi segreti. Qualcuno ha deciso di farti tacere per sempre.", image: "https://placehold.co/400x400/0f172a/f1f5f9?text=Silenzio" }
+        },
         success: { 
             title: "Signore della Città", 
             message: "Hai conquistato anche la giungla di pietra. La tua saga è completa.", 
