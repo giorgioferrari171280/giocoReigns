@@ -3,9 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gilda dei Taglialegna</title>
+    <title>IL SENTIERO DI MIDGARD</title>
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: {
+                        'xs': '0.9375rem',      // 0.75rem + 3px (0.1875rem)
+                        'sm': '1.0625rem',      // 0.875rem + 3px
+                        'base': '1.1875rem',    // 1rem + 3px
+                        'lg': '1.3125rem',      // 1.125rem + 3px
+                        'xl': '1.4375rem',      // 1.25rem + 3px
+                        '2xl': '1.6875rem',     // 1.5rem + 3px
+                        '3xl': '2.0625rem',     // 1.875rem + 3px
+                        '4xl': '2.4375rem',     // 2.25rem + 3px
+                        '5xl': '3.1875rem',     // 3rem + 3px
+                        '6xl': '3.9375rem'      // 3.75rem + 3px
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Font e Stili Personalizzati -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,19 +38,20 @@
     <div id="background-container" class="fixed inset-0 bg-cover bg-center transition-all duration-1000 z-0"></div>
     <div class="fixed inset-0 bg-black/80 z-10"></div>
 
-    <div id="app-container" class="relative z-20 w-full max-w-4xl mx-auto bg-[#3e3431]/90 rounded-lg shadow-2xl p-6 border-2 border-[#5a4d44] h-[95vh] max-h-[900px]">
+    <div id="app-container" class="relative z-20 w-[90vw] h-[90vh] max-w-[1400px] max-h-[700px] mx-auto bg-[#3e3431]/90 rounded-lg shadow-2xl p-6 border-2 border-[#5a4d44] overflow-hidden">
 
         <!-- Schermata Menu Principale -->
         <div id="main-menu" class="text-center">
-            <h1 id="main-title" class="text-4xl font-bold mb-6 text-[#c8a27c]">Gilda dei Taglialegna</h1>
+            <h1 id="main-title" class="text-4xl font-bold mb-6 text-[#c8a27c]">IL SENTIERO DI MIDGARD</h1>
             <div class="space-y-3 max-w-sm mx-auto">
-                <button id="new-game-button" class="game-button w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-green-900">NUOVA PARTITA</button>
-                <button id="load-game-button" class="game-button w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-blue-900">CARICA PARTITA</button>
-                <button id="import-game-button" class="game-button w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-purple-900">IMPORTA PARTITA</button>
-                <button id="hof-button" class="game-button w-full bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-yellow-900">HALL OF FAME</button>
-                <button id="credits-button" class="game-button w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-gray-800">CREDITS</button>
-                <button id="manual-button" class="game-button w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-gray-800">MANUALE DI GIOCO</button>
-                <button id="exit-button" class="game-button w-full bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-red-900">ESCI DAL GIOCO</button>
+                <button id="new-game-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">NUOVA PARTITA</button>
+                <button id="load-game-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">CARICA PARTITA</button>
+                <button id="import-game-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">IMPORTA PARTITA</button>
+                <button id="hof-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">HALL OF FAME</button>
+                <button id="achievements-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">ACHIEVEMENT</button>
+                <button id="credits-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">CREDITS</button>
+                <button id="manual-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">MANUALE DI GIOCO</button>
+                <button id="exit-button" class="game-button main-menu-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">ESCI DAL GIOCO</button>
             </div>
             <div class="mt-6 max-w-sm mx-auto">
                 <label for="volume-slider" class="block mb-2 text-sm font-medium">Volume</label>
@@ -39,17 +60,20 @@
         </div>
 
         <!-- Schermata di Gioco -->
-        <div id="game-screen" class="hidden">
-            <div class="md:flex md:gap-8">
-                <div class="md:w-1/2 mb-4 md:mb-0">
-                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+        <div id="game-screen" class="hidden h-full">
+            <div class="flex gap-6 h-full">
+                <div class="flex-shrink-0" style="height: 100%; aspect-ratio: 1/1;">
+                    <div class="w-full h-full bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
                         <img id="scenario-image" src="" alt="Immagine dello scenario" class="w-full h-full object-cover">
                     </div>
                 </div>
-                <div class="md:w-1/2 flex flex-col">
+                <div class="flex-1 flex flex-col justify-between py-2">
                     <div class="flex justify-between items-center mb-2">
                         <div id="score-display" class="text-lg font-bold text-[#c8a27c]">Punteggio: 0</div>
                         <div class="flex gap-2">
+                            <button id="volume-game-button" title="Controllo Volume" class="icon-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z" /></svg>
+                            </button>
                             <button id="download-game-button" title="Scarica Partita" class="icon-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                             </button>
@@ -58,51 +82,133 @@
                             </button>
                         </div>
                     </div>
-                    <div id="metrics-display" class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4"></div>
-                    <div class="flex-grow flex items-center justify-center my-4">
+                    <div id="metrics-display" class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs"></div>
+                    <div class="flex-grow flex items-center justify-center py-4">
                         <p id="scenario-description" class="text-center text-lg"></p>
                     </div>
-                    <div class="flex justify-between gap-4">
-                        <button id="no-button" class="game-button w-1/2 bg-red-800 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-red-900"></button>
-                        <button id="yes-button" class="game-button w-1/2 bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-green-900"></button>
+                    <div class="flex justify-between gap-4 mt-auto">
+                        <button id="no-button" class="game-button uniform-button w-1/2 font-bold py-3 px-4 rounded-lg shadow-lg border-b-4"></button>
+                        <button id="yes-button" class="game-button uniform-button w-1/2 font-bold py-3 px-4 rounded-lg shadow-lg border-b-4"></button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Schermata di Fine Gioco -->
-        <div id="end-screen" class="hidden">
-            <div class="md:flex md:gap-8">
-                <div class="md:w-1/2 mb-4 md:mb-0">
-                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+        <div id="end-screen" class="hidden h-full">
+            <div class="flex gap-6 h-full">
+                <div class="flex-shrink-0" style="height: 100%; aspect-ratio: 1/1;">
+                    <div class="w-full h-full bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
                         <img id="end-image" src="" alt="Immagine del finale" class="w-full h-full object-cover">
                     </div>
                 </div>
-                <div class="md:w-1/2 flex flex-col justify-center text-center">
+                <div class="flex-1 flex flex-col justify-center text-center">
                     <h2 id="end-title" class="text-3xl font-bold mb-4"></h2>
                     <p id="end-message" class="text-xl mb-6"></p>
                     <p id="final-score" class="text-2xl font-bold text-[#c8a27c] mb-6"></p>
-                    <button id="continue-button" class="game-button bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-green-900 mx-auto hidden mb-2">Continua l'Avventura</button>
-                    <button id="end-screen-menu-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900 mx-auto">Torna al Menu</button>
+                    <button id="continue-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 mx-auto hidden mb-2">Continua l'Avventura</button>
+                    <button id="end-screen-menu-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 mx-auto">Torna al Menu</button>
                 </div>
             </div>
         </div>
 
+        <!-- Schermata Achievement -->
+        <div id="achievement-screen" class="hidden h-full flex items-center justify-center">
+            <div class="text-center max-w-md">
+                <!-- Immagine Achievement quadrata e centrale -->
+                <div class="mb-8 mx-auto" style="width: 300px; height: 300px;">
+                    <div class="w-full h-full bg-black rounded-lg overflow-hidden border-4 border-yellow-400 shadow-2xl">
+                        <img id="achievement-image" src="" alt="Achievement" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <!-- Nome Achievement in risalto -->
+                <h2 id="achievement-name" class="text-3xl font-bold text-yellow-400 mb-3"></h2>
+                
+                <!-- Descrizione Achievement più piccola -->
+                <p id="achievement-description" class="text-lg text-gray-300 mb-8"></p>
+                
+                <!-- Pulsante continua -->
+                <button id="achievement-continue-button" class="game-button uniform-button font-bold py-3 px-8 rounded-lg shadow-lg border-b-4">
+                    Continua
+                </button>
+            </div>
+        </div>
+
         <!-- Schermata Cutscene -->
-        <div id="cutscene-screen" class="hidden">
-            <div class="md:flex md:gap-8 h-full">
-                <div class="md:w-1/2 mb-4 md:mb-0">
-                    <div class="w-full aspect-square bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
+        <div id="cutscene-screen" class="hidden h-full">
+            <div class="flex gap-6 h-full">
+                <div class="flex-shrink-0" style="height: 100%; aspect-ratio: 1/1;">
+                    <div class="w-full h-full bg-black rounded-md overflow-hidden border-2 border-[#c8a27c]">
                         <img id="cutscene-image" src="" alt="Immagine scena" class="w-full h-full object-cover">
                     </div>
                 </div>
-                <div class="md:w-1/2 flex flex-col justify-center">
+                <div class="flex-1 flex flex-col justify-center">
                     <div class="mb-8">
                         <p id="cutscene-text" class="text-xl leading-relaxed"></p>
                     </div>
                     <div class="text-center">
-                        <button id="cutscene-continue-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Continua...</button>
+                        <button id="cutscene-continue-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4">Continua...</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schermata Riepilogo Metriche -->
+        <div id="metrics-summary-screen" class="hidden h-full flex items-center justify-center">
+            <div class="text-center max-w-2xl">
+                <h2 class="text-3xl font-bold mb-6 text-[#c8a27c]">Riepilogo Capitolo</h2>
+                
+                <!-- Titolo del capitolo completato -->
+                <h3 id="completed-chapter-title" class="text-xl font-semibold mb-4 text-gray-300"></h3>
+                
+                <!-- Griglia delle metriche finali -->
+                <div class="bg-[#3a302a] p-6 rounded-lg border border-[#5a4d44] mb-6">
+                    <h4 class="text-lg font-bold text-[#c8a27c] mb-4">Metriche Finali</h4>
+                    <div id="final-metrics-display" class="grid grid-cols-2 gap-4">
+                        <!-- Le metriche verranno popolate qui -->
+                    </div>
+                </div>
+                
+                <!-- Statistiche aggiuntive -->
+                <div class="bg-[#2a2420] p-4 rounded-lg border border-[#5a4d44] mb-6">
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-[#c8a27c] font-semibold">Scenari Completati:</span>
+                            <span id="scenarios-completed" class="text-white ml-2"></span>
+                        </div>
+                        <div>
+                            <span class="text-[#c8a27c] font-semibold">Punteggio Finale:</span>
+                            <span id="final-score-summary" class="text-white ml-2"></span>
+                        </div>
+                        <div>
+                            <span class="text-[#c8a27c] font-semibold">Durata Partita:</span>
+                            <span id="game-duration" class="text-white ml-2"></span>
+                        </div>
+                        <div>
+                            <span class="text-[#c8a27c] font-semibold">Motivo Fine:</span>
+                            <span id="end-reason" class="text-white ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pulsante continua -->
+                <button id="metrics-summary-continue-button" class="game-button uniform-button font-bold py-3 px-8 rounded-lg shadow-lg border-b-4">
+                    Continua al Finale
+                </button>
+            </div>
+        </div>
+
+        <!-- Schermata Achievement Lista -->
+        <div id="achievements-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold mb-6 text-center text-orange-400">🏆 Achievement</h2>
+            <div id="achievements-list" class="grid grid-cols-2 gap-4 max-w-4xl mx-auto mb-8 max-h-96 overflow-y-auto">
+                <!-- Achievement cards will be populated here -->
+            </div>
+            <div class="text-center">
+                <div class="flex justify-center space-x-4">
+                    <button id="achievements-clear-button" class="game-button bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-red-800">Cancella Achievement</button>
+                    <button id="achievements-back-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4">Torna al Menu</button>
                 </div>
             </div>
         </div>
@@ -112,7 +218,10 @@
             <h2 class="text-3xl font-bold mb-6 text-center text-[#c8a27c]">Hall of Fame</h2>
             <ol id="hof-list" class="space-y-2 text-xl max-w-md mx-auto"></ol>
             <div class="text-center mt-8">
-                <button id="hof-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+                <div class="flex justify-center space-x-4">
+                    <button id="hof-clear-button" class="game-button bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-red-800">Cancella Record</button>
+                    <button id="hof-back-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4">Torna al Menu</button>
+                </div>
             </div>
         </div>
 
@@ -123,7 +232,7 @@
             <p id="dev-message" class="text-lg mt-4 max-w-lg mx-auto"></p>
             <a id="dev-link" href="#" target="_blank" class="inline-block mt-4 text-blue-400 hover:text-blue-300">Visita il mio sito</a>
             <div class="text-center mt-8">
-                <button id="credits-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+                <button id="credits-back-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4">Torna al Menu</button>
             </div>
         </div>
 
@@ -131,20 +240,182 @@
         <div id="manual-screen" class="hidden text-left flex flex-col h-full">
             <h2 class="text-3xl font-bold mb-4 text-center text-[#c8a27c]">Manuale di Gioco</h2>
             <div class="space-y-4 text-gray-300 flex-grow overflow-y-auto pr-4">
-                <p>Benvenuto nella Gilda dei Taglialegna. Il tuo obiettivo è guidare la gilda il più a lungo possibile, bilanciando quattro metriche fondamentali.</p>
-                <div>
-                    <h3 class="text-xl font-bold text-[#c8a27c]">Le Metriche</h3>
-                    <p>Ogni capitolo della tua saga avrà metriche diverse. Presta attenzione a come le tue scelte le influenzano.</p>
+                
+                <!-- Introduzione -->
+                <div class="bg-[#3a302a] p-4 rounded-lg border border-[#5a4d44]">
+                    <h3 class="text-xl font-bold text-[#c8a27c] mb-2">🌲 Benvenuto nella Gilda dei Taglialegna</h3>
+                    <p>Sei il nuovo Maestro della Gilda dei Taglialegna, un'antica organizzazione che governa le foreste e protegge il equilibrio tra natura e civiltà. Il tuo compito è guidare la gilda attraverso sfide, decisioni difficili e avventure epiche, mantenendo viva l'organizzazione il più a lungo possibile.</p>
                 </div>
-                <p>Ogni volta che una metrica raggiunge il massimo (10) o il minimo (0), il capitolo termina. L'eccesso è pericoloso quanto la scarsità.</p>
-                <h3 class="text-xl font-bold text-[#c8a27c]">Progressione</h3>
-                <p>Il finale di un capitolo può sbloccare il capitolo successivo. Le tue scelte plasmano il tuo percorso.</p>
-                <h3 class="text-xl font-bold text-[#c8a27c]">Salvataggi</h3>
-                <p>Il gioco salva automaticamente i progressi nel browser. Puoi usare "Carica Partita" per riprendere. Con "Importa Partita" e "Scarica Partita" puoi trasferire i tuoi salvataggi tra diversi computer.</p>
+
+                <!-- Obiettivo del Gioco -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">🎯 Obiettivo del Gioco</h3>
+                    <p>Il tuo scopo principale è <strong>sopravvivere il più a lungo possibile</strong> guidando la gilda attraverso diversi capitoli e scenari. Ogni decisione che prendi influenzerà le sei metriche fondamentali della gilda. La partita termina quando una qualsiasi metrica raggiunge i valori estremi (0 o 20).</p>
+                </div>
+
+                <!-- Sistema delle Metriche -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">📊 Sistema delle Metriche</h3>
+                    <p>La gilda è governata da <strong>sei metriche fondamentali</strong> che determinano la sua salute e prosperità:</p>
+                    
+                    <div class="ml-4 mt-2 space-y-2">
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-green-600">
+                            <strong class="text-green-400">💰 Tesoro (0→20)</strong>
+                            <p class="text-sm">Ricchezza e risorse finanziarie della gilda. Parte da 0 e cresce con commercio e bottino.</p>
+                        </div>
+                        
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-red-600">
+                            <strong class="text-red-400">💪 Forza (0→20)</strong>
+                            <p class="text-sm">Potere militare e capacità di difesa. Aumenta con allenamento e reclutamento.</p>
+                        </div>
+                        
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-blue-600">
+                            <strong class="text-blue-400">❤️ Salute (20→0)</strong>
+                            <p class="text-sm">Benessere fisico dei membri. Parte alta e diminuisce con malattie e fatiche.</p>
+                        </div>
+                        
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-yellow-600">
+                            <strong class="text-yellow-400">🌾 Risorse (20→0)</strong>
+                            <p class="text-sm">Cibo, materiali e scorte. Si consumano nel tempo e con le attività.</p>
+                        </div>
+                        
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-purple-600">
+                            <strong class="text-purple-400">🏆 Onore (10±)</strong>
+                            <p class="text-sm">Reputazione e rispetto. Bilanciato, può salire o scendere con le tue azioni.</p>
+                        </div>
+                        
+                        <div class="bg-[#2a2420] p-3 rounded border-l-4 border-orange-600">
+                            <strong class="text-orange-400">⚔️ Coraggio (10±)</strong>
+                            <p class="text-sm">Morale e determinazione dei membri. Influenzato dalle sfide affrontate.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meccaniche di Gioco -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">⚙️ Meccaniche di Gioco</h3>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088] mt-3">🔥 Condizioni di Termine</h4>
+                    <p>La partita termina <strong>immediatamente</strong> quando una qualsiasi metrica raggiunge:</p>
+                    <ul class="list-disc ml-6 mt-2 space-y-1">
+                        <li><strong>Valore 0:</strong> La gilda collassa per mancanza di quella risorsa</li>
+                        <li><strong>Valore 20:</strong> L'eccesso diventa controproducente e distruttivo</li>
+                    </ul>
+                    <p class="text-yellow-300 mt-2"><strong>⚠️ Ricorda:</strong> Troppo di qualcosa è pericoloso quanto troppo poco!</p>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088] mt-3">🎲 Sistema di Scelte</h4>
+                    <p>In ogni scenario dovrai scegliere tra due opzioni:</p>
+                    <ul class="list-disc ml-6 mt-2 space-y-1">
+                        <li><strong>Pulsante SÌ:</strong> Accetti la proposta o intraprendi l'azione</li>
+                        <li><strong>Pulsante NO:</strong> Rifiuti o scegli un approccio conservativo</li>
+                    </ul>
+                    <p>Ogni scelta modificherà diverse metriche in modi spesso imprevedibili.</p>
+                </div>
+
+                <!-- Strategia e Consigli -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">🧠 Strategia e Consigli</h3>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088]">📈 Gestione delle Metriche</h4>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Equilibrio:</strong> Evita estremismi, mantieni tutte le metriche in zone sicure (3-17)</li>
+                        <li><strong>Pianificazione:</strong> Pensa agli effetti a lungo termine delle tue scelte</li>
+                        <li><strong>Compensazione:</strong> Se una metrica è alta, cerca modi per bilanciarla</li>
+                        <li><strong>Attenzione ai Valori Critici:</strong> Quando una metrica si avvicina a 2 o 18, agisci con cautela</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088] mt-3">🎯 Suggerimenti Pratici</h4>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li>Leggi attentamente ogni scenario prima di decidere</li>
+                        <li>Non avere paura di dire "NO" quando necessario</li>
+                        <li>Monitora costantemente le tue metriche durante il gioco</li>
+                        <li>Ogni capitolo ha temi e sfide diverse: adattati di conseguenza</li>
+                    </ul>
+                </div>
+
+                <!-- Progressione e Capitoli -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">📖 Progressione e Capitoli</h3>
+                    <p>Il gioco è strutturato in <strong>capitoli tematici</strong>, ognuno con le proprie sfide uniche:</p>
+                    
+                    <div class="bg-[#2a2420] p-3 rounded mt-2">
+                        <h4 class="font-semibold text-[#d4b088]">🌟 Sblocco dei Capitoli</h4>
+                        <p>Il finale di ogni capitolo può sbloccare nuovi percorsi narrativi. Le tue scelte passate influenzano quali capitoli diventano disponibili.</p>
+                        
+                        <h4 class="font-semibold text-[#d4b088] mt-2">🔄 Rigiocabilità</h4>
+                        <p>Ogni partita può seguire percorsi diversi. Sperimenta scelte differenti per scoprire nuove storie e finali!</p>
+                    </div>
+                </div>
+
+                <!-- Achievement System -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">🏆 Sistema Achievement</h3>
+                    <p>Completa obiettivi speciali per sbloccare achievement che celebrano i tuoi successi:</p>
+                    <ul class="list-disc ml-6 mt-2 space-y-1">
+                        <li><strong>Achievement di Sopravvivenza:</strong> Basati sulla durata delle tue partite</li>
+                        <li><strong>Achievement Narrativi:</strong> Sbloccati completando specifici capitoli o finali</li>
+                        <li><strong>Achievement di Strategia:</strong> Per aver gestito le metriche in modi particolari</li>
+                    </ul>
+                    <p class="text-yellow-300 mt-2">Controlla la sezione Achievement dal menu principale per vedere i tuoi progressi!</p>
+                </div>
+
+                <!-- Sistema di Salvataggio -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">💾 Sistema di Salvataggio</h3>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088]">🔄 Salvataggio Automatico</h4>
+                    <p>Il gioco salva automaticamente i tuoi progressi nel browser locale. Non perderai mai una partita!</p>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088] mt-2">📤 Esportazione/Importazione</h4>
+                    <div class="bg-[#2a2420] p-3 rounded mt-2">
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li><strong>"Scarica Partita":</strong> Esporta il tuo salvataggio in un file JSON</li>
+                            <li><strong>"Importa Partita":</strong> Carica un salvataggio da file</li>
+                            <li><strong>Utilità:</strong> Trasferisci partite tra computer diversi o crea backup</li>
+                        </ul>
+                    </div>
+                    
+                    <h4 class="text-lg font-semibold text-[#d4b088] mt-2">🎮 Hall of Fame</h4>
+                    <p>Le tue migliori partite vengono registrate nella Hall of Fame, ordinata per punteggio raggiunto.</p>
+                </div>
+
+                <!-- Controlli -->
+                <div>
+                    <h3 class="text-xl font-bold text-[#c8a27c]">🎮 Controlli di Gioco</h3>
+                    <div class="bg-[#2a2420] p-3 rounded">
+                        <ul class="list-disc ml-4 space-y-1">
+                            <li><strong>Mouse:</strong> Clicca sui pulsanti per fare scelte</li>
+                            <li><strong>Pulsanti SÌ/NO:</strong> Nelle decisioni principali del gioco</li>
+                            <li><strong>Pulsanti di Navigazione:</strong> Per tornare al menu o scaricare salvataggi</li>
+                            <li><strong>Barra Volume:</strong> Regola l'audio di sottofondo dal menu principale</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-[#3a302a] p-4 rounded-lg border border-[#5a4d44] text-center">
+                    <p class="text-[#c8a27c] font-semibold">🌲 Che la foresta ti guidi, Maestro della Gilda! 🌲</p>
+                    <p class="text-sm mt-1">Buona fortuna nella tua avventura epica!</p>
+                </div>
+                
             </div>
             <div class="text-center mt-4 pt-4 border-t border-gray-700">
-                <button id="manual-back-button" class="game-button bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg border-b-4 border-blue-900">Torna al Menu</button>
+                <button id="manual-back-button" class="game-button uniform-button font-bold py-3 px-6 rounded-lg shadow-lg border-b-4">Torna al Menu</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modale Controllo Volume In-Game -->
+    <div id="volume-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-30">
+        <div class="bg-[#3e3431] p-8 rounded-lg shadow-2xl w-full max-w-sm text-center border-2 border-[#5a4d44]">
+            <h2 class="text-2xl font-bold mb-6 text-[#c8a27c]">Controllo Volume</h2>
+            <div class="mb-6">
+                <label for="volume-game-slider" class="block mb-3 text-sm font-medium text-gray-300">Volume Audio</label>
+                <input id="volume-game-slider" type="range" min="0" max="1" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+            </div>
+            <button id="volume-modal-close" class="game-button uniform-button w-full font-bold py-3 px-4 rounded-lg shadow-lg border-b-4">
+                Chiudi
+            </button>
         </div>
     </div>
 
@@ -155,8 +426,57 @@
             <div>
                 <label for="player-name-input" class="block mb-2 text-sm font-medium text-left">Nome del Giocatore</label>
                 <input type="text" id="player-name-input" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Massimo 20 lettere" maxlength="20" required>
+                <div id="name-error-message" class="hidden mt-2 text-red-400 text-sm">⚠️ Devi inserire almeno una lettera per il nome!</div>
             </div>
-            <button id="start-game-button" class="mt-6 game-button w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg border-b-4 border-green-900">Inizia l'Avventura</button>
+            <button id="start-game-button" class="mt-6 game-button uniform-button w-full font-bold py-2 px-4 rounded-lg shadow-lg border-b-4">Inizia l'Avventura</button>
+        </div>
+    </div>
+
+    <!-- Modale Conferma Cancellazione Hall of Fame -->
+    <div id="hof-clear-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-30">
+        <div class="bg-[#3e3431] p-8 rounded-lg shadow-2xl w-full max-w-md text-center border-2 border-[#5a4d44]">
+            <h2 class="text-2xl font-bold mb-4 text-[#c8a27c]">Conferma Cancellazione</h2>
+            <div class="mb-6">
+                <div class="w-16 h-16 mx-auto mb-4 text-red-500 flex items-center justify-center">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <p class="text-lg text-gray-300 mb-2">Sei sicuro di voler cancellare tutti i record dalla Hall of Fame?</p>
+                <p class="text-sm text-red-400">Questa azione non può essere annullata.</p>
+            </div>
+            <div class="flex space-x-4">
+                <button id="hof-clear-confirm" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-red-800 transition-all duration-200">
+                    Cancella Tutto
+                </button>
+                <button id="hof-clear-cancel" class="flex-1 game-button uniform-button font-bold py-3 px-4 rounded-lg shadow-lg border-b-4">
+                    Annulla
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Conferma Cancellazione Achievement -->
+    <div id="achievements-clear-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-30">
+        <div class="bg-[#3e3431] p-8 rounded-lg shadow-2xl w-full max-w-md text-center border-2 border-[#5a4d44]">
+            <h2 class="text-2xl font-bold mb-4 text-[#c8a27c]">Conferma Cancellazione</h2>
+            <div class="mb-6">
+                <div class="w-16 h-16 mx-auto mb-4 text-red-500 flex items-center justify-center">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <p class="text-lg text-gray-300 mb-2">Sei sicuro di voler cancellare tutti gli achievement ottenuti?</p>
+                <p class="text-sm text-red-400">Questa azione non può essere annullata.</p>
+            </div>
+            <div class="flex space-x-4">
+                <button id="achievements-clear-confirm" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg border-b-4 border-red-800 transition-all duration-200">
+                    Cancella Tutto
+                </button>
+                <button id="achievements-clear-cancel" class="flex-1 game-button uniform-button font-bold py-3 px-4 rounded-lg shadow-lg border-b-4">
+                    Annulla
+                </button>
+            </div>
         </div>
     </div>
 
@@ -169,8 +489,10 @@
     <script src="audio.js"></script>
     <script src="cutscene.js"></script>
     <script src="developer.js"></script>
-    <script src="gilda_tagliaboschi.js"></script>
-    <script src="gilda_maniscalchi.js"></script>
+    <script src="metriche.js"></script>
+    <script src="achievements.js"></script>
+    <script src="prologo.js"></script>
+    <script src="capitolo001.js"></script>
     <script src="content.js"></script>
     <script src="player.js"></script>
     <script src="script.js"></script>

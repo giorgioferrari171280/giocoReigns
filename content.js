@@ -4,8 +4,8 @@
 // ===================================================================================
 
 const chapters = {
-    gildaDeiBoschi: gildaDeiBoschiData,
-    gildaDeiManiscalchi: gildaDeiManiscalchiData
+    prologo: prologoData,
+    capitolo001: capitolo001Data
     // Aggiungi qui altri capitoli quando crei i loro file.
-    // Esempio: gildaDeiMercanti: gildaDeiMercantiData,
+    // Esempio: capitolo002: capitolo002Data,
 };
